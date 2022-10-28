@@ -1,0 +1,114 @@
+spring:
+  banner:
+    location: classpath:banner.txt
+  application:
+    name: bist-api
+  data:
+    mongodb:
+      uri: mongodb+srv://root:root@cluster0.d3pp2ry.mongodb.net/bist?retryWrites=true&w=majority
+  main:
+    allow-circular-references: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dene231.herokuapp.com/auth/realms/company-services
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+jwt:
+  auth:
+    converter:
+      resource-id: finance-app
+      principal-attribute: preferred_username
+
+keycloak-admin:
+    realm: master
+    url: https://dene231.herokuapp.com/auth
+    username: admin
+    password: Hacker132
+    client-id: admin-cli
+
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000,*
+
+management:
+  endpoints:
+    web:
+      exposure.include: beans, env, health, info, metrics, mappings
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  show-actuator: true
+  swagger-ui:
+    groups-order: DESC
+    disable-swagger-default-url: true
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+
+finance-share:
+  share-list:
+    - AEFES
+    - AKBNK
+    - AKSEN
+    - ARCLK
+    - ASELS
+    - BIMAS
+    - EKGYO
+    - EREGL
+    - FROTO
+    - GARAN
+    - GUBRF
+    - HEKTS
+    - ISCTR
+    - KCHOL
+    - KOZAA
+    - KOZAL
+    - KRDMD
+    - PETKM
+    - PGSUS
+    - SAHOL
+    - SASA
+    - SISE
+    - TAVHL
+    - TCELL
+    - THYAO
+    - TKFEN
+    - TOASO
+    - TTKOM
+    - TUPRS
+    - VESTL
+    - YKBNK
+    - VESBE
+  url-append: .E.BIST
+
+server:
+  port: 9081
+
+resilience4j:
+  circuitbreaker:
+    circuit-breaker-aspect-order: 1
+    instances:
+      finance:
+        failure-rate-threshold: 50
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 10000ms
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 2
+        minimum-number-of-calls: 1
+        event-consumer-buffer-size: 10
+  retry:
+    retry-aspect-order: 2
+    instances:
+      finance:
+        max-attempts: 3
+        wait-duration: 2s
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+
