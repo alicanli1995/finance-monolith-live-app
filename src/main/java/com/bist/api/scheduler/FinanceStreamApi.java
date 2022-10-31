@@ -4,6 +4,7 @@ import com.bist.api.client.FinanceService;
 import com.bist.api.config.FinanceDataStreamConfig;
 import com.bist.api.service.ProcessData;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
