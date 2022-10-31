@@ -17,8 +17,8 @@ public class FinanceStreamApi {
     private final ProcessData processData;
 
 
-//    @Scheduled( cron = "1 0/15 10-18 ? * MON-FRI",
-//                zone = "Europe/Istanbul")
+   @Scheduled( cron = "1 0/15 10-18 ? * MON-FRI",
+               zone = "Europe/Istanbul")
 //    @Scheduled(fixedDelay = 1000000)
     private void getBistInformation() {
         financeDataStreamConfig
