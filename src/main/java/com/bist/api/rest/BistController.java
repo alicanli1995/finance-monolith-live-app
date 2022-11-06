@@ -1,9 +1,6 @@
 package com.bist.api.rest;
 
-import com.bist.api.rest.dto.AddCommentRequest;
-import com.bist.api.rest.dto.CommentResponseDTO;
-import com.bist.api.rest.dto.HistoryResponseModel;
-import com.bist.api.rest.dto.ShareGenericModel;
+import com.bist.api.rest.dto.*;
 import com.bist.api.service.BistService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -48,6 +45,12 @@ public class BistController {
     @GetMapping(path = "/{name}/comments",produces = "application/json")
     public List<CommentResponseDTO> getComments(@PathVariable String name) {
         return bistService.getComments(name);
+    }
+
+    @PostMapping(path = "/{name}/delete/comments",produces = "application/json")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteComment(@PathVariable String name, Principal principal, @RequestBody CommentDeleteRequestDTO comment)  {
+        bistService.deleteComment(name, principal.getName(), comment);
     }
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})

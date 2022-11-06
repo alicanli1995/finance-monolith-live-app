@@ -153,6 +153,14 @@ public class BistServiceImpl implements BistService {
                 .build();
     }
 
+    @Override
+    public void deleteComment(String name, String username, CommentDeleteRequestDTO comment)  {
+        var bist = bistsRepository.findById(name)
+                .orElseThrow(() -> new RuntimeException(BIST_NOT_FOUND));
+        bist.getComments().removeIf(x -> x.getUsername().equals(username) && x.getText().equals(comment.comment()));
+        bistsRepository.save(bist);
+    }
+
     private List<CommentResponseDTO.CommentDto> getComments(Share bist) {
         return bist.getComments()
                 .stream()

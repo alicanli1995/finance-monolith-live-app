@@ -1,9 +1,6 @@
 package com.bist.api.service;
 
-import com.bist.api.rest.dto.AddCommentRequest;
-import com.bist.api.rest.dto.CommentResponseDTO;
-import com.bist.api.rest.dto.HistoryResponseModel;
-import com.bist.api.rest.dto.ShareGenericModel;
+import com.bist.api.rest.dto.*;
 
 import java.util.List;
 
@@ -18,4 +15,6 @@ public interface BistService {
     HistoryResponseModel getBistHistory(String name, int hours);
 
     CommentResponseDTO addCommentBist(String name, AddCommentRequest comment, String username);
+
+    void deleteComment(String name, String username, CommentDeleteRequestDTO comment) ;
 }
