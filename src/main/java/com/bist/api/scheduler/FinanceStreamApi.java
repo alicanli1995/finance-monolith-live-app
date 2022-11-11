@@ -33,7 +33,7 @@ public class FinanceStreamApi {
                     var endeksUrl = bist.concat(financeDataStreamConfig.getUrlAppend());
                     List<FinanceApiDTO> bistShare = new ArrayList<>();
                     try {
-                        financeService.getBISTInformation(endeksUrl);
+                        bistShare = financeService.getBISTInformation(endeksUrl);
                         processData.processData(bistShare);
                         Thread.sleep(8000);
                         log.info("Bist information is processed {}", bistShare);
