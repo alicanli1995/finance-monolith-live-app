@@ -2,11 +2,15 @@ package com.bist.api.scheduler;
 
 import com.bist.api.client.FinanceService;
 import com.bist.api.config.FinanceDataStreamConfig;
+import com.bist.api.rest.dto.FinanceApiDTO;
 import com.bist.api.service.ProcessData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -27,16 +31,16 @@ public class FinanceStreamApi {
                 .forEach(bist ->
                 {
                     var endeksUrl = bist.concat(financeDataStreamConfig.getUrlAppend());
-                    var bistShare = financeService.getBISTInformation(endeksUrl);
+                    List<FinanceApiDTO> bistShare = new ArrayList<>();
                     try {
-                        Thread.sleep(5000);
+                        financeService.getBISTInformation(endeksUrl);
+                        processData.processData(bistShare);
+                        Thread.sleep(8000);
+                        log.info("Bist information is processed {}", bistShare);
                     } catch (InterruptedException e) {
+                        log.error("Bist information is not processed {}", bistShare);
                         throw new RuntimeException(e);
                     }
-                    if (bistShare.isEmpty()) throw new RuntimeException("Error on getting information... Try later !");
-                    processData.processData(bistShare);
-                    log.info("Bist information is processed");
-
                 });
 
     }
