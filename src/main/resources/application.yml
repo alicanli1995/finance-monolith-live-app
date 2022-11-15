@@ -112,3 +112,5 @@ resilience4j:
         enable-exponential-backoff: true
         exponential-backoff-multiplier: 2
 
+finance:
+  resource: ata

@@ -4,7 +4,8 @@ import com.bist.api.model.BistModel;
 import com.bist.api.model.Share;
 import com.bist.api.repository.BistValueRepository;
 import com.bist.api.repository.BistsRepository;
-import com.bist.api.rest.dto.FinanceApiDTO;
+import com.bist.api.rest.dto.AtaYatirimFinanceApiDTO;
+import com.bist.api.rest.dto.IsYatirimFinanceApiDTO;
 import com.bist.api.service.ProcessData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class ProcessDataImpl implements ProcessData {
     private final BistsRepository bistsRepository;
     @Override
     @Transactional
-    public void processData(List<FinanceApiDTO> bistShare) {
+    public void processData(List<IsYatirimFinanceApiDTO> bistShare) {
         String bistName = bistShare.get(0).c().trim().split("\\.")[0];
         bistShare
                 .forEach(
@@ -43,25 +44,59 @@ public class ProcessDataImpl implements ProcessData {
         );
     }
 
-    private void updateBistPrice(FinanceApiDTO financeApiDTO, String name) {
+    @Override
+    public void processDataForATA(AtaYatirimFinanceApiDTO ataYatirimFinanceApiDTO, String bist) {
+        bistValueRepository.save(BistModel.builder()
+                .id(UUID.randomUUID().toString())
+                .name(bist)
+                .value(ataYatirimFinanceApiDTO.getResult().getSonFiyat())
+                .createdAt(LocalDateTime.now())
+                .build());
+        updateBistPriceForAta(ataYatirimFinanceApiDTO,bist);
+    }
+
+    private void updateBistPriceForAta(AtaYatirimFinanceApiDTO ataYatirimFinanceApiDTO, String bist) {
+        if (bistsRepository.existsById(bist)) {
+            Share shareFromDb = bistsRepository.findById(bist).get();
+            shareFromDb.setValue(ataYatirimFinanceApiDTO.getResult().getSonFiyat());
+            shareFromDb.setDailyChange(ataYatirimFinanceApiDTO.getResult().getFark());
+            shareFromDb.setDailyChangePercentage(ataYatirimFinanceApiDTO.getResult().getFarkYuzde());
+            shareFromDb.setPreviousDayClose(ataYatirimFinanceApiDTO.getResult().getOncGun());
+            shareFromDb.setDailyVolume(ataYatirimFinanceApiDTO.getResult().getHacim());
+            bistsRepository.save(shareFromDb);
+        } else {
+            Share shareToSave = Share.builder()
+                    .dailyVolume(ataYatirimFinanceApiDTO.getResult().getHacim())
+                    .dailyChange(ataYatirimFinanceApiDTO.getResult().getFark())
+                    .previousDayClose(ataYatirimFinanceApiDTO.getResult().getOncGun())
+                    .name(bist)
+                    .description(ataYatirimFinanceApiDTO.getResult().getTanim())
+                    .value(ataYatirimFinanceApiDTO.getResult().getSonFiyat())
+                    .dailyChangePercentage(ataYatirimFinanceApiDTO.getResult().getFarkYuzde())
+                    .build();
+            bistsRepository.save(shareToSave);
+        }
+    }
+
+
+    private void updateBistPrice(IsYatirimFinanceApiDTO isYatirimFinanceApiDTO, String name) {
             if (bistsRepository.existsById(name)) {
                 Share shareFromDb = bistsRepository.findById(name).get();
-                shareFromDb.setValue(financeApiDTO.last());
-                shareFromDb.setDailyChange(financeApiDTO.dailyChange());
-                shareFromDb.setDailyChangePercentage(financeApiDTO.dailyChangePercentage());
-                shareFromDb.setPreviousDayClose(financeApiDTO.previousDayClose());
-                shareFromDb.setDailyVolume(financeApiDTO.dailyVolume());
+                shareFromDb.setValue(isYatirimFinanceApiDTO.last());
+                shareFromDb.setDailyChange(isYatirimFinanceApiDTO.dailyChange());
+                shareFromDb.setDailyChangePercentage(isYatirimFinanceApiDTO.dailyChangePercentage());
+                shareFromDb.setPreviousDayClose(isYatirimFinanceApiDTO.previousDayClose());
+                shareFromDb.setDailyVolume(isYatirimFinanceApiDTO.dailyVolume());
                 bistsRepository.save(shareFromDb);
             } else {
                 Share shareToSave = Share.builder()
-                        .dailyVolume(financeApiDTO.dailyVolume())
-                        .dailyChange(financeApiDTO.dailyChange())
-                        .previousDayClose(financeApiDTO.previousDayClose())
+                        .dailyVolume(isYatirimFinanceApiDTO.dailyVolume())
+                        .dailyChange(isYatirimFinanceApiDTO.dailyChange())
+                        .previousDayClose(isYatirimFinanceApiDTO.previousDayClose())
                         .name(name)
-                        .description(financeApiDTO.description())
-                        .value(financeApiDTO.last())
-                        .dailyVolume(financeApiDTO.dailyVolume())
-                        .dailyChangePercentage(financeApiDTO.dailyChangePercentage())
+                        .description(isYatirimFinanceApiDTO.description())
+                        .value(isYatirimFinanceApiDTO.last())
+                        .dailyChangePercentage(isYatirimFinanceApiDTO.dailyChangePercentage())
                         .build();
                 bistsRepository.save(shareToSave);
             }

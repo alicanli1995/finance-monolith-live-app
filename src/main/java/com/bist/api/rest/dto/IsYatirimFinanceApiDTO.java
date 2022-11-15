@@ -3,7 +3,7 @@ package com.bist.api.rest.dto;
 import lombok.Builder;
 
 @Builder
-public record FinanceApiDTO(
+public record IsYatirimFinanceApiDTO(
         String dailyChangePercentage,
         String dailyChange,
         String c,
