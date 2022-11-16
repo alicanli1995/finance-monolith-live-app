@@ -54,6 +54,7 @@ logging:
 
 finance-share:
   share-list:
+    - ALFAS
     - AEFES
     - AKBNK
     - AKSEN
