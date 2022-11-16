@@ -1,4 +1,15 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: <username>
+    password: <password>
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   banner:
     location: classpath:banner.txt
   application:
@@ -22,11 +33,11 @@ jwt:
       principal-attribute: preferred_username
 
 keycloak-admin:
-    realm: <realm>
-    url: <keycloak-url>
-    username: <username>
-    password: <your-password>
-    client-id: <client-id>
+  realm: <realm>
+  url: <keycloak-url>
+  username: <username>
+  password: <your-password>
+  client-id: <client-id>
 
 
 app:
