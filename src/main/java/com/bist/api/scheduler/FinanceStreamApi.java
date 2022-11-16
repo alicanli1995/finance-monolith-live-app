@@ -28,9 +28,9 @@ public class FinanceStreamApi {
 
 
 
-//   @Scheduled( cron = "1 0/15 10-18 ? * MON-FRI",
-//               zone = "Europe/Istanbul")
-    @Scheduled(fixedDelay = 1000000)
+   @Scheduled( cron = "1 0/15 10-18 ? * MON-FRI",
+               zone = "Europe/Istanbul")
+//    @Scheduled(fixedDelay = 1000000)
     private void getBistInformation() {
         financeDataStreamConfig
                 .getShareList()
