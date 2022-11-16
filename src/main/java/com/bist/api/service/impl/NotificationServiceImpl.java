@@ -29,7 +29,6 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public boolean isNotified(String bistName, String mailAddress) {
         return bistNotificationRepository.findByBistNameAndMailAddress(bistName, mailAddress)
-                .map(BistNotification::isSent)
-                .orElse(false);
+                .isPresent();
     }
 }
