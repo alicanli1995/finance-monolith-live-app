@@ -5,23 +5,21 @@ import com.bist.api.model.Share;
 import com.bist.api.repository.BistValueRepository;
 import com.bist.api.repository.BistsRepository;
 import com.bist.api.rest.dto.AtaYatirimFinanceApiDTO;
-import com.bist.api.rest.dto.IsYatirimFinanceApiDTO;
 import com.bist.api.service.ProcessData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "finance.resource", havingValue = "ata")
+@ConditionalOnProperty(prefix = "finance-share", name = "resource", havingValue = "ata")
 public class AtaProcessDataImpl implements ProcessData {
 
     private final BistValueRepository bistValueRepository;
@@ -30,6 +28,7 @@ public class AtaProcessDataImpl implements ProcessData {
 
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void processData(Object ataYatirimFinanceApiDTO, String bist) {
         if(ataYatirimFinanceApiDTO instanceof AtaYatirimFinanceApiDTO ataYatirimFinanceApiDTO1) {
             bistValueRepository.save(BistModel.builder()

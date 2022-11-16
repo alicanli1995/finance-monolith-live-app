@@ -9,7 +9,6 @@ import com.bist.api.rest.dto.IsYatirimFinanceApiDTO;
 import com.bist.api.service.ProcessData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -26,20 +25,18 @@ public class FinanceStreamApi {
     private final FinanceDataStreamConfig financeDataStreamConfig;
     private final ProcessData processData;
 
-    @Value("${finance.resource}")
-    private String financeResource;
 
 
 
-   @Scheduled( cron = "1 0/15 10-18 ? * MON-FRI",
-               zone = "Europe/Istanbul")
-//    @Scheduled(fixedDelay = 1000000)
+//   @Scheduled( cron = "1 0/15 10-18 ? * MON-FRI",
+//               zone = "Europe/Istanbul")
+    @Scheduled(fixedDelay = 1000000)
     private void getBistInformation() {
         financeDataStreamConfig
                 .getShareList()
                 .forEach(bist ->
                 {
-                    if (financeResource.equals(CommonConstants.IS_YATIRIM)){
+                    if (financeDataStreamConfig.getResource().equals(CommonConstants.IS_YATIRIM)){
                         var endeksUrl = bist.concat(financeDataStreamConfig.getUrlAppend());
                         List<IsYatirimFinanceApiDTO> bistShare = new ArrayList<>();
                         try {

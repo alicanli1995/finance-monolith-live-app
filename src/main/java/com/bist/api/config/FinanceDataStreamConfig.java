@@ -13,4 +13,5 @@ import java.util.List;
 public class FinanceDataStreamConfig {
     private List<String> shareList;
     private String urlAppend;
+    private String resource;
 }

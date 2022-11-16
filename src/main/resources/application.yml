@@ -87,6 +87,7 @@ finance-share:
     - YKBNK
     - VESBE
   url-append: .E.BIST
+  resource: ata
 
 server:
   port: 9081
@@ -111,6 +112,3 @@ resilience4j:
         wait-duration: 2s
         enable-exponential-backoff: true
         exponential-backoff-multiplier: 2
-
-finance:
-  resource: ata
