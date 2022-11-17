@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -28,8 +30,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public boolean isNotified(String bistName, String mailAddress) {
-        return bistNotificationRepository.findByBistNameAndMailAddress(bistName, mailAddress)
-                .map(BistNotification::isSent)
-                .orElse(false);
+        Optional<BistNotification> byBistNameAndMailAddress = bistNotificationRepository.findByBistNameAndMailAddress(bistName, mailAddress);
+        return byBistNameAndMailAddress.filter(bistNotification -> !bistNotification.isSent()).isPresent();
     }
 }
