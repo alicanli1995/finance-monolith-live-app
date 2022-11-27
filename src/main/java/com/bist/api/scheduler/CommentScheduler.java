@@ -20,7 +20,7 @@ public class CommentScheduler {
     private final BistsRepository bistsRepository;
 
 
-    @Scheduled(cron = "0 0 20 * * MON-FRI",
+    @Scheduled(cron = "0 0 23 * * MON-FRI",
             zone = "Europe/Istanbul")
     private void deleteIfCommentDatePassThreeMonth() {
         bistsRepository.findAll()
