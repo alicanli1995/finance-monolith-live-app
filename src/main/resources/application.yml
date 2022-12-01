@@ -65,6 +65,7 @@ logging:
 
 finance-share:
   share-list:
+    - IPEKE
     - ALFAS
     - AEFES
     - AKBNK
